@@ -26,12 +26,19 @@ interface N8nNode {
 }
 
 interface N8nConnectionData {
-  main?: [[{ node: string; main: [any] }]];
+    node: string;
+    type: string;
+    index: number;
 }
+
+interface N8nOutputConnections {
+  main?: N8nConnectionData[][];
+}
+
 
 interface N8nWorkflow {
   nodes: N8nNode[];
-  connections: Record<string, N8nConnectionData>;
+  connections: Record<string, N8nOutputConnections>;
 }
 
 interface WorkflowVisualizerProps {
@@ -48,7 +55,7 @@ const parseWorkflow = (jsonString: string): { nodes: Node[], edges: Edge[] } => 
 
     const reactFlowNodes: Node[] = workflow.nodes.map((node, index) => ({
       id: node.id,
-      data: { label: `${node.name} (${node.type})` },
+      data: { label: `${node.name}` },
       position: { x: node.position[0], y: node.position[1] },
       sourcePosition: Position.Right,
       targetPosition: Position.Left,
@@ -62,29 +69,33 @@ const parseWorkflow = (jsonString: string): { nodes: Node[], edges: Edge[] } => 
     const reactFlowEdges: Edge[] = [];
     const connectionEntries = Object.entries(workflow.connections);
 
-    for (const [sourceNodeId, connectionData] of connectionEntries) {
-      if (connectionData.main && connectionData.main[0]) {
-        connectionData.main[0].forEach((connection: any) => {
-          const targetNodeId = connection.node;
-          const outputName = Object.keys(connection.main[0])[0];
-          
-          reactFlowEdges.push({
-            id: `e-${sourceNodeId}-${targetNodeId}-${outputName}`,
-            source: sourceNodeId,
-            target: targetNodeId,
-            label: outputName,
-            type: ConnectionLineType.SmoothStep,
-            markerEnd: { type: MarkerType.ArrowClosed, color: 'hsl(var(--primary))' },
-             style: {
-              stroke: 'hsl(var(--primary))',
-              strokeWidth: 2,
-            },
-            labelStyle: {
-              fill: 'hsl(var(--foreground))',
-              fontWeight: 500,
-            },
-            labelBgStyle: {
-                fill: 'hsl(var(--background))',
+    for (const [sourceNodeId, outputConnections] of connectionEntries) {
+      if (outputConnections.main) {
+        outputConnections.main.forEach((outputGroup, outputIndex) => {
+          outputGroup.forEach((connection, connectionIndex) => {
+             if (connection && connection.node) {
+              const targetNodeId = connection.node;
+              const outputName = `main`;
+
+              reactFlowEdges.push({
+                id: `e-${sourceNodeId}-${targetNodeId}-${outputIndex}-${connectionIndex}`,
+                source: sourceNodeId,
+                target: targetNodeId,
+                label: outputName,
+                type: ConnectionLineType.SmoothStep,
+                markerEnd: { type: MarkerType.ArrowClosed, color: 'hsl(var(--primary))' },
+                 style: {
+                  stroke: 'hsl(var(--primary))',
+                  strokeWidth: 2,
+                },
+                labelStyle: {
+                  fill: 'hsl(var(--foreground))',
+                  fontWeight: 500,
+                },
+                labelBgStyle: {
+                    fill: 'hsl(var(--background))',
+                }
+              });
             }
           });
         });

@@ -12,6 +12,7 @@ import ReactFlow, {
   EdgeChange,
   ConnectionLineType,
   Position,
+  MarkerType,
 } from 'reactflow';
 import 'reactflow/dist/style.css';
 
@@ -24,13 +25,13 @@ interface N8nNode {
   parameters?: object;
 }
 
-interface N8nConnection {
-  main: [Array<{ node: string; main: [Array<any>|any] }>];
+interface N8nConnectionData {
+  main?: [[{ node: string; main: [any] }]];
 }
 
 interface N8nWorkflow {
   nodes: N8nNode[];
-  connections: N8nConnection;
+  connections: Record<string, N8nConnectionData>;
 }
 
 interface WorkflowVisualizerProps {
@@ -53,7 +54,7 @@ const parseWorkflow = (jsonString: string): { nodes: Node[], edges: Edge[] } => 
       targetPosition: Position.Left,
       style: {
         background: 'hsl(var(--card))',
-        color: 'hsl(var(--foreground))',
+        color: 'hsl(var(--card-foreground))',
         border: '1px solid hsl(var(--border))',
       }
     }));
@@ -73,9 +74,17 @@ const parseWorkflow = (jsonString: string): { nodes: Node[], edges: Edge[] } => 
             target: targetNodeId,
             label: outputName,
             type: ConnectionLineType.SmoothStep,
-            markerEnd: { type: 'arrowclosed' },
+            markerEnd: { type: MarkerType.ArrowClosed, color: 'hsl(var(--primary))' },
              style: {
-              stroke: 'hsl(var(--foreground))'
+              stroke: 'hsl(var(--primary))',
+              strokeWidth: 2,
+            },
+            labelStyle: {
+              fill: 'hsl(var(--foreground))',
+              fontWeight: 500,
+            },
+            labelBgStyle: {
+                fill: 'hsl(var(--background))',
             }
           });
         });

@@ -1,14 +1,15 @@
 # n8n Workflow Generator
 
-This is a web application that leverages AI to generate n8n workflow JSON configurations from natural language descriptions. Users can describe a desired automation or workflow in plain English, and the application will produce the corresponding JSON needed to import that workflow into n8n.
+This is a web application that leverages AI to generate n8n workflow JSON configurations from natural language descriptions. Users can describe a desired automation or workflow in plain English, and the application will produce the corresponding JSON needed to import that workflow into n8n, along with a visual representation of the flow.
 
 ## Functionality
 
--   **AI-Powered Generation**: Uses Genkit and Google's Gemini model to understand user descriptions and generate accurate n8n workflow JSON.
+-   **AI-Powered Generation**: Uses Genkit and Google's Gemini model to understand user descriptions and generate accurate n8n workflow JSON. The AI is primed with knowledge of the correct n8n JSON structure to ensure high-quality output.
+-   **Workflow Visualization**: Instantly view the generated workflow as a node-based graph. This visual diagram helps you understand the flow's logic and structure at a glance.
 -   **Simple User Interface**: A clean and intuitive interface where you can type your workflow description.
--   **Instant Output**: The generated JSON is displayed in a text area.
--   **Copy & Download**: Easily copy the generated JSON to your clipboard or download it as a `.json` file.
--   **Built with Modern Tech**: The application is built with Next.js, React, ShadCN UI, and Tailwind CSS for a fast and responsive user experience.
+-   **Dual Output**: Switch between the raw JSON view and the visualizer with a simple tabbed interface.
+-   **Copy & Download**: Easily copy the generated JSON to your clipboard or download it as a `.json` file for direct use in your n8n instance.
+-   **Built with Modern Tech**: The application is built with Next.js, React, ShadCN UI, ReactFlow, and Tailwind CSS for a fast and responsive user experience.
 
 ## Getting Started
 

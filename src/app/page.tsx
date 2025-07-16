@@ -8,6 +8,8 @@ import { Textarea } from '@/components/ui/textarea';
 import { useToast } from '@/hooks/use-toast';
 import { Sparkles, Copy, Download, Loader2 } from 'lucide-react';
 import { Skeleton } from '@/components/ui/skeleton';
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { WorkflowVisualizer } from '@/components/workflow-visualizer';
 
 export default function Home() {
   const [description, setDescription] = useState('');
@@ -108,41 +110,59 @@ export default function Home() {
           </Card>
 
           <Card className="flex flex-col">
-            <CardHeader className="flex flex-row items-center justify-between">
-              <CardTitle className="font-headline">Generated n8n JSON</CardTitle>
-              <div className="flex items-center gap-2">
-                <Button
-                  variant="outline"
-                  size="icon"
-                  onClick={handleCopy}
-                  disabled={!workflowJson || isLoading}
-                  aria-label="Copy JSON"
-                >
-                  <Copy className="h-4 w-4" />
-                </Button>
-                <Button
-                  variant="outline"
-                  size="icon"
-                  onClick={handleDownload}
-                  disabled={!workflowJson || isLoading}
-                  aria-label="Download JSON"
-                >
-                  <Download className="h-4 w-4" />
-                </Button>
-              </div>
-            </CardHeader>
-            <CardContent className="flex-grow">
-              {isLoading ? (
-                <Skeleton className="w-full h-full min-h-[300px] md:min-h-[400px]" />
-              ) : (
-                <Textarea
-                  readOnly
-                  placeholder="Your generated JSON will appear here..."
-                  className="w-full h-full resize-none font-code text-sm bg-muted/50 min-h-[300px] md:min-h-[400px]"
-                  value={workflowJson}
-                />
-              )}
-            </CardContent>
+            <Tabs defaultValue="json" className="flex flex-col h-full">
+              <CardHeader className="flex flex-row items-center justify-between">
+                <TabsList>
+                  <TabsTrigger value="json">JSON</TabsTrigger>
+                  <TabsTrigger value="visualize" disabled={!workflowJson}>Visualize</TabsTrigger>
+                </TabsList>
+                <div className="flex items-center gap-2">
+                  <Button
+                    variant="outline"
+                    size="icon"
+                    onClick={handleCopy}
+                    disabled={!workflowJson || isLoading}
+                    aria-label="Copy JSON"
+                  >
+                    <Copy className="h-4 w-4" />
+                  </Button>
+                  <Button
+                    variant="outline"
+                    size="icon"
+                    onClick={handleDownload}
+                    disabled={!workflowJson || isLoading}
+                    aria-label="Download JSON"
+                  >
+                    <Download className="h-4 w-4" />
+                  </Button>
+                </div>
+              </CardHeader>
+              <CardContent className="flex-grow pt-0">
+                {isLoading ? (
+                  <Skeleton className="w-full h-full min-h-[300px] md:min-h-[400px]" />
+                ) : (
+                  <>
+                    <TabsContent value="json" className="h-full">
+                      <Textarea
+                        readOnly
+                        placeholder="Your generated JSON will appear here..."
+                        className="w-full h-full resize-none font-code text-sm bg-muted/50 min-h-[300px] md:min-h-[400px]"
+                        value={workflowJson}
+                      />
+                    </TabsContent>
+                    <TabsContent value="visualize" className="h-full">
+                       {workflowJson ? (
+                        <WorkflowVisualizer json={workflowJson} />
+                      ) : (
+                         <div className="flex items-center justify-center w-full h-full min-h-[300px] md:min-h-[400px] bg-muted/50 rounded-md">
+                          <p className="text-muted-foreground">Generate a workflow to see the visualization.</p>
+                        </div>
+                      )}
+                    </TabsContent>
+                  </>
+                )}
+              </CardContent>
+            </Tabs>
           </Card>
         </div>
       </main>

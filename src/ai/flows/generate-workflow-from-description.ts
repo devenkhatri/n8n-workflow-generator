@@ -28,9 +28,11 @@ const prompt = ai.definePrompt({
   name: 'generateWorkflowFromDescriptionPrompt',
   input: {schema: GenerateWorkflowFromDescriptionInputSchema},
   output: {schema: GenerateWorkflowFromDescriptionOutputSchema},
-  prompt: `You are an expert in designing n8n workflows.  An n8n workflow is defined using JSON.
+  prompt: `You are an expert in designing n8n workflows. An n8n workflow is defined using JSON.
 
-You will take a user's description of a desired n8n workflow, and generate a JSON configuration representing that workflow.  The JSON must be valid and well-formatted.
+You will take a user's description of a desired n8n workflow, and generate a JSON configuration representing that workflow. The JSON must be valid and well-formatted.
+
+IMPORTANT: Your entire response must be ONLY the raw JSON content, without any surrounding text, explanations, or markdown code blocks.
 
 Only use nodes available in the n8n community edition.
 
